@@ -1,0 +1,14 @@
+[
+    {
+        "active":false,
+        "osName":"example",
+        "lastVersion":"1.1.1",
+        "advancedInfo":"example.json"
+    },
+    {
+        "active":true,
+        "osName":"Ubuntu Desktop",
+        "lastVersion":"20.04.1",
+        "advancedInfo":"ubuntu-desktop.json"
+    }
+]
