@@ -1,14 +1,18 @@
 [
     {
         "active":false,
+        "downloaded":false,
         "osName":"example",
         "lastVersion":"1.1.1",
-        "advancedInfo":"example.json"
+        "url":"example.com"
     },
     {
         "active":true,
+        "downloaded":false,
+        "checkVersion":true,
         "osName":"Ubuntu Desktop",
         "lastVersion":"20.04.1",
-        "advancedInfo":"ubuntu-desktop.json"
+        "url":"https://mirrors.mit.edu/ubuntu-releases/releases/",
+    	"file":"ubuntu-$ver-desktop-amd64.iso"
     }
 ]
