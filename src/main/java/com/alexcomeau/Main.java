@@ -48,6 +48,26 @@ public class Main {
 				//cleanup the html into a more usable format
 				ArrayList<String> list = cleanupHTML(url);
 				
+				 for(Iterator<String> it = list.iterator(); it.hasNext();) {
+			        	//get index of string	
+			        	String s = it.next();
+			        	
+			        	
+			        	
+			        	int i = list.indexOf(s);
+			        	
+			        	if(s.matches(".*\\d.*")) {
+			        		list.set(i, s);
+			        	}else {
+			        		it.remove();
+			        	}
+			        	
+				 }
+				 for (String s : list) {
+					 Handler.debug(s);
+				 }
+				
+				
 				//TODO detect version being outdated
 				//TODO also skip version stuff
 			}
