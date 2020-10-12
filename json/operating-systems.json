@@ -14,7 +14,7 @@
       "lastVersion": "20.04.1",
       "isIsoDir":false,
       "url": "https://mirrors.mit.edu/ubuntu-releases/releases/",
-      "file": "ubuntu-$ver-desktop-amd64.iso"
+      "file": "ubuntu-#ver-desktop-amd64.iso"
    },
    {
       "active": true,
@@ -24,7 +24,7 @@
       "osName": "Kali Linux",
       "isIsoDir":true,
       "url": "http://cdimage.kali.org/current/",
-      "file": "kali-linux-$-live-amd64.iso"
+      "file": "kali-linux-#-live-amd64.iso"
    },
    {
       "active": true,
@@ -34,7 +34,7 @@
       "osName": "Latest Debian Installer",
       "isIsoDir":true,
       "url": "http://mirrors.gigenet.com/debian-cd/current/amd64/iso-cd/",
-      "file": "debian-$-amd64-xfce-CD-1.iso"
+      "file": "debian-#-amd64-xfce-CD-1.iso"
    },
    {
       "active": true,
@@ -44,6 +44,6 @@
       "osName": "Arch Linux",
       "isIsoDir":true,
       "url": "http://mirrors.acm.wpi.edu/archlinux/iso/latest/",
-      "file": "archlinux-$-x86_64.iso"
+      "file": "archlinux-#-x86_64.iso"
    }
 ]

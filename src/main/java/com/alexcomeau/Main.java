@@ -56,8 +56,6 @@ public class Main {
 				        	//get index of string	
 				        	String s = it.next();
 				        	
-				        	
-				        	
 				        	int i = list.indexOf(s);
 				        	
 				        	//only get the versions that have digits
@@ -79,7 +77,7 @@ public class Main {
 						 //add to the arraylist of versions as integers
 						 versions.add(Integer.parseInt(s));
 						 
-						 Handler.debug(s);
+						 Handler.debug("string in list to pad: " + s);
 					 }
 					 //sort into versions
 					 Collections.sort(versions);
@@ -98,18 +96,95 @@ public class Main {
 						 }
 					 }
 					 
+					 
+					 
 					 //convert integer version to string
 					 download = insertEveryNCharacters(((Integer) newV).toString(), ".", 2);
 					 
 					 //remove padded zeroes
 					 download = download.replaceAll(".00", "");
+					 
+					 if(os.getLastVersion() == download) {
+						 download = "none";
+						 continue;
+					 }
+					 
+					 
+					 
+					 url = new URL(os.getUrl() + download + "/");
+					 list = cleanupHTML(url, true);
+					 
+					 String file = os.getFile();
+					 String split[] = file.split("#");
+					 for(Iterator<String> it = list.iterator(); it.hasNext();) {
+						 //get index of string	
+						 String s = it.next();
+				        	
+						 int i = list.indexOf(s);
+				        	
+						 //only get the versions that have digits
+						 if(s.contains(split[0]) && s.contains(split[1])) {
+			        		list.set(i, s);
+			        		Handler.debug("first string is " + split[0]);
+			        		Handler.debug("second string is " + split[1]);
+			        		Handler.debug("this matches " + s);
+		        		}else {
+		        			it.remove();
+			        	}
+				        				        	
+					}
 				}else {
 										
-					for(String s : list) {
-						Handler.debug(s);
+					String file = os.getFile();
+					String split[] = file.split("#");
+					for(Iterator<String> it = list.iterator(); it.hasNext();) {
+			        	//get index of string	
+			        	String s = it.next();
+			        	
+			        	int i = list.indexOf(s);
+			        	
+			        	//only get the versions that have digits
+			        	if(s.contains(split[0]) && s.contains(split[1])) {
+			        		list.set(i, s);
+			        		/*Handler.debug("first string is " + split[0]);
+			        		Handler.debug("second string is " + split[1]);
+			        		Handler.debug("this matches " + s);*/
+			        	}else {
+			        		it.remove();
+			        	}
+			        				        	
 					}
 					
-					download = "test";
+					
+					int version = 0;
+					int newVersion = Integer.parseInt(os.getLastVersion().replace(".", ""));
+					
+					download = "none";
+					
+					for(String s : list) {
+						String tmp;
+						tmp = s.replace(split[0], "");
+						tmp = tmp.replace(split[1], "");
+						tmp = tmp.replace(".", "");
+						//Handler.debug("the lastversion is " + newVersion);
+						//Handler.debug("stripped string is " + tmp);
+						version = Integer.parseInt(tmp);
+						
+						if(version > newVersion) {
+							newVersion = version;
+							download = s;
+						}
+					
+						
+						
+					}
+					
+					if(Integer.parseInt(os.getLastVersion().replace(".", "")) == newVersion) {
+						Handler.debug("no update");
+						
+					}else {
+						Handler.debug("download this: " + download);
+					}
 				}
 				 
 				 //debug print out the version to download
@@ -119,12 +194,6 @@ public class Main {
 				 }else {
 					 Handler.debug("we need to get version: " + download + " of " + os.getOsName()); 
 				 }
-				 
-				 
-				 
-				 
-				 
-				 
 				 
 				//TODO detect version being outdated
 				//TODO also skip version stuff
@@ -183,7 +252,7 @@ public class Main {
         	}else {
         		if(isIsoDir) {
         			s= s.substring(0, s.indexOf(".iso")) + ".iso";
-        			Handler.debug("substring is " + s);
+        			//Handler.debug("substring is " + s);
         			list.set(i, s);
         			continue;
         		}
