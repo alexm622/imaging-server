@@ -8,8 +8,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Cleaner;
@@ -56,6 +58,7 @@ public class Main {
 			        	
 			        	int i = list.indexOf(s);
 			        	
+			        	//only get the versions that have digits
 			        	if(s.matches(".*\\d.*")) {
 			        		list.set(i, s);
 			        	}else {
@@ -63,16 +66,59 @@ public class Main {
 			        	}
 			        	
 				 }
+				 //versions as integers
+				 ArrayList<Integer> versions = new ArrayList<Integer>();
+				 
 				 for (String s : list) {
+					 //remove all "."'s
+					 s = s.replace(".", "");
+					 //pad with zeroes
+					 s = StringUtils.rightPad(s, 8, "0");
+					 //add to the arraylist of versions as integers
+					 versions.add(Integer.parseInt(s));
+					 
 					 Handler.debug(s);
 				 }
-				
-				
+				 //sort into versions
+				 Collections.sort(versions);
+				 
+				 //get the last version
+				 String version = os.getLastVersion();
+				 
+				 //get the last version as an integer, and then set the variable for the next one to download
+				 int lastV = Integer.parseInt(StringUtils.rightPad(version.replace(".", ""), 8, "0"));
+				 int newV = lastV;
+				 
+				 //find the highest version
+				 for(int i : versions) {
+					 if(i > newV) {
+						 newV = i;
+					 }
+				 }
+				 
+				 //convert integer version to string
+				 String download = insertEveryNCharacters(((Integer) newV).toString(), ".", 2);
+				 
+				 //remove padded zeroes
+				 download = download.replaceAll(".00", "");
+				 
+				 //remove leftover zeroes if there are any on the end
+				 if(download.endsWith("0")) {
+					 download = download.substring(0, download.length() - 1);					 
+				 }
+				 
+				 //debug print out the version to download
+				 Handler.debug("a.k.a version: " + download);
+				 
+				 
+				 
+				 
+				 
 				//TODO detect version being outdated
 				//TODO also skip version stuff
 			}
 		}catch(Exception e) {
-			e.printStackTrace();
+			Handler.debug(e, true);
 		}
 		
 	}
@@ -133,5 +179,20 @@ public class Main {
         return list;
         
         
+	}
+	private static String insertEveryNCharacters(String originalText, String textToInsert, int breakInterval) {
+	    String out = "";
+	    int textLength = originalText.length(); //initialize this here or in the start of the for in order to evaluate this once, not every loop
+	    for (int i = breakInterval , current = 0; i <= textLength || current < textLength; current = i, i += breakInterval ) {
+	        if(current != 0) {  //do not insert the text on the first loop
+	            out += textToInsert;
+	        }
+	        if(i <= textLength) { //double check that text is at least long enough to go to index i without out of bounds exception
+	            out += originalText.substring(current, i);
+	        } else { //text left is not longer than the break interval, so go simply from current to end.
+	            out += originalText.substring(current); //current to end (if text is not perfectly divisible by interval, it will still get included)
+	        }
+	    }
+	    return out;
 	}
 }
