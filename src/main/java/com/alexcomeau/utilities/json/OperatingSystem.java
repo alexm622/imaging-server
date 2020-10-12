@@ -6,6 +6,7 @@ public class OperatingSystem {
 	private boolean downloaded;
 	private boolean checkVersion;
 	private String osName;
+	private boolean isIsoDir;
 	private String lastVersion;
 	private String url;
 	private String file;
@@ -24,6 +25,10 @@ public class OperatingSystem {
 	
 	public void setOsName(String osName) {
 		this.osName = osName;
+	}
+	
+	public void setIsIsoDir(boolean isIsoDir) {
+		this.isIsoDir = isIsoDir;
 	}
 	
 	public void setLastVersion(String lastVersion) {
@@ -52,6 +57,10 @@ public class OperatingSystem {
 	
 	public String getOsName() {
 		return this.osName;
+	}
+	
+	public boolean getIsIsoDir() {
+		return this.isIsoDir;
 	}
 	
 	public String getLastVersion() {

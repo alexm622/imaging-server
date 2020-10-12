@@ -44,71 +44,83 @@ public class Main {
 				if(!os.getActive()) {
 					continue;
 				}
+				
 				//get url of mirror
 				URL url = new URL(os.getUrl());
 				
 				//cleanup the html into a more usable format
-				ArrayList<String> list = cleanupHTML(url);
-				
-				 for(Iterator<String> it = list.iterator(); it.hasNext();) {
-			        	//get index of string	
-			        	String s = it.next();
-			        	
-			        	
-			        	
-			        	int i = list.indexOf(s);
-			        	
-			        	//only get the versions that have digits
-			        	if(s.matches(".*\\d.*")) {
-			        		list.set(i, s);
-			        	}else {
-			        		it.remove();
-			        	}
-			        	
-				 }
-				 //versions as integers
-				 ArrayList<Integer> versions = new ArrayList<Integer>();
-				 
-				 for (String s : list) {
-					 //remove all "."'s
-					 s = s.replace(".", "");
-					 //pad with zeroes
-					 s = StringUtils.rightPad(s, 8, "0");
-					 //add to the arraylist of versions as integers
-					 versions.add(Integer.parseInt(s));
-					 
-					 Handler.debug(s);
-				 }
-				 //sort into versions
-				 Collections.sort(versions);
-				 
-				 //get the last version
-				 String version = os.getLastVersion();
-				 
-				 //get the last version as an integer, and then set the variable for the next one to download
-				 int lastV = Integer.parseInt(StringUtils.rightPad(version.replace(".", ""), 8, "0"));
-				 int newV = lastV;
-				 
-				 //find the highest version
-				 for(int i : versions) {
-					 if(i > newV) {
-						 newV = i;
+				ArrayList<String> list = cleanupHTML(url, os.getIsIsoDir());
+				String download;
+				if(!os.getIsIsoDir()) {
+					for(Iterator<String> it = list.iterator(); it.hasNext();) {
+				        	//get index of string	
+				        	String s = it.next();
+				        	
+				        	
+				        	
+				        	int i = list.indexOf(s);
+				        	
+				        	//only get the versions that have digits
+				        	if(s.matches(".*\\d.*")) {
+				        		list.set(i, s);
+				        	}else {
+				        		it.remove();
+				        	}
+				        	
 					 }
-				 }
-				 
-				 //convert integer version to string
-				 String download = insertEveryNCharacters(((Integer) newV).toString(), ".", 2);
-				 
-				 //remove padded zeroes
-				 download = download.replaceAll(".00", "");
-				 
-				 //remove leftover zeroes if there are any on the end
-				 if(download.endsWith("0")) {
-					 download = download.substring(0, download.length() - 1);					 
-				 }
+					 //versions as integers
+					 ArrayList<Integer> versions = new ArrayList<Integer>();
+					 
+					 for (String s : list) {
+						 //remove all "."'s
+						 s = s.replace(".", "");
+						 //pad with zeroes
+						 s = StringUtils.rightPad(s, 8, "0");
+						 //add to the arraylist of versions as integers
+						 versions.add(Integer.parseInt(s));
+						 
+						 Handler.debug(s);
+					 }
+					 //sort into versions
+					 Collections.sort(versions);
+					 
+					 //get the last version
+					 String version = os.getLastVersion();
+					 
+					 //get the last version as an integer, and then set the variable for the next one to download
+					 int lastV = Integer.parseInt(StringUtils.rightPad(version.replace(".", ""), 8, "0"));
+					 int newV = lastV;
+					 
+					 //find the highest version
+					 for(int i : versions) {
+						 if(i > newV) {
+							 newV = i;
+						 }
+					 }
+					 
+					 //convert integer version to string
+					 download = insertEveryNCharacters(((Integer) newV).toString(), ".", 2);
+					 
+					 //remove padded zeroes
+					 download = download.replaceAll(".00", "");
+				}else {
+										
+					for(String s : list) {
+						Handler.debug(s);
+					}
+					
+					download = "test";
+				}
 				 
 				 //debug print out the version to download
-				 Handler.debug("a.k.a version: " + download);
+				 
+				 if(download == os.getLastVersion()) {
+					 Handler.debug("we don't need to update " + os.getOsName());
+				 }else {
+					 Handler.debug("we need to get version: " + download + " of " + os.getOsName()); 
+				 }
+				 
+				 
 				 
 				 
 				 
@@ -119,12 +131,13 @@ public class Main {
 			}
 		}catch(Exception e) {
 			Handler.debug(e, true);
+			e.printStackTrace();
 		}
 		
 	}
 
 	
-	private static ArrayList<String> cleanupHTML(URL url) throws IOException{
+	private static ArrayList<String> cleanupHTML(URL url, boolean isIsoDir) throws IOException{
 		//read mirror data as html
         BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
         
@@ -162,11 +175,18 @@ public class Main {
         	
         	
         	
-        	if(!s.contains("/")) {
+        	if((isIsoDir && s.contains("/")) || (!s.contains("/") && !isIsoDir)) {
         		//if item is a file remove
         		it.remove();
+        	}else if(isIsoDir && !s.contains(".iso") || s.contains(".sig") || s.contains(".torrent")) {
+        		it.remove();
         	}else {
-        		
+        		if(isIsoDir) {
+        			s= s.substring(0, s.indexOf(".iso")) + ".iso";
+        			Handler.debug("substring is " + s);
+        			list.set(i, s);
+        			continue;
+        		}
         		s = s.substring(0, s.indexOf("/"));
         		list.set(i, s);
         	}
