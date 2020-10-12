@@ -1,18 +1,45 @@
 [
-    {
-        "active":false,
-        "downloaded":false,
-        "osName":"example",
-        "lastVersion":"1.1.1",
-        "url":"example.com"
-    },
-    {
-        "active":true,
-        "downloaded":false,
-        "checkVersion":true,
-        "osName":"Ubuntu Desktop",
-        "lastVersion":"20.04.1",
-        "url":"https://mirrors.mit.edu/ubuntu-releases/releases/",
-    	"file":"ubuntu-$ver-desktop-amd64.iso"
-    }
+   {
+      "active": false,
+      "downloaded": false,
+      "osName": "example",
+      "lastVersion": "1.1.1",
+      "url": "example.com"
+   },
+   {
+      "active": true,
+      "downloaded": false,
+      "checkVersion": true,
+      "osName": "Ubuntu Desktop",
+      "lastVersion": "20.04.1",
+      "url": "https://mirrors.mit.edu/ubuntu-releases/releases/",
+      "file": "ubuntu-$ver-desktop-amd64.iso"
+   },
+   {
+      "active": true,
+      "downloaded": false,
+      "checkVersion": true,
+      "lastVersion": "2019.2",
+      "osName": "Kali Linux",
+      "url": "http://cdimage.kali.org/current/",
+      "file": "kali-linux-$-live-amd64.iso"
+   },
+   {
+      "active": true,
+      "downloaded": false,
+      "checkVersion": true,
+      "lastVersion": "10.5.0",
+      "osName": "Latest Debian Installer",
+      "url": "http://mirrors.gigenet.com/debian-cd/current/amd64/iso-cd/",
+      "file": "debian-$-amd64-xfce-CD-1.iso"
+   },
+   {
+      "active": true,
+      "downloaded": false,
+      "checkVersion": true,
+      "lastVersion": "2020.09.01",
+      "osName": "Arch Linux",
+      "url": "http://mirrors.acm.wpi.edu/archlinux/iso/latest/",
+      "file": "archlinux-$-x86_64.iso"
+   }
 ]
