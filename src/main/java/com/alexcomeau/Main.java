@@ -29,8 +29,8 @@ public class Main {
 			//create objectmapper
 			ObjectMapper om = new ObjectMapper();
 			
-			//create arraylist of updateable os's
-			ArrayList<OperatingSystem> updateable = new ArrayList<OperatingSystem>();
+			//arraylist of urls
+			ArrayList<URL> downloadURLS = new ArrayList<URL>();
 			
 			//read os's from file
 			OperatingSystem[] oses = om.readValue(new File("json/operating-systems.json"), OperatingSystem[].class);
@@ -50,8 +50,9 @@ public class Main {
 				
 				//cleanup the html into a more usable format
 				ArrayList<String> list = cleanupHTML(url, os.getIsIsoDir());
-				String download;
+				String download, downloadVer = os.getLastVersion();
 				if(!os.getIsIsoDir()) {
+					//TODO this needs comments
 					for(Iterator<String> it = list.iterator(); it.hasNext();) {
 				        	//get index of string	
 				        	String s = it.next();
@@ -104,37 +105,112 @@ public class Main {
 					 //remove padded zeroes
 					 download = download.replaceAll(".00", "");
 					 
-					 if(os.getLastVersion() == download) {
-						 download = "none";
-						 continue;
-					 }
 					 
 					 
 					 
+					 //get the new url
 					 url = new URL(os.getUrl() + download + "/");
 					 list = cleanupHTML(url, true);
 					 
+					 //get the file name
 					 String file = os.getFile();
+					 
+					 //this was some old debug stuff
+					 //Handler.debug("ubuntu download: " + file);
+					 
+					 
+					 //split the string at the version number placeholder
 					 String split[] = file.split("#");
+					 
+					 //initialize this first
+					 boolean isBeta = false;
+					 
 					 for(Iterator<String> it = list.iterator(); it.hasNext();) {
 						 //get index of string	
 						 String s = it.next();
+						 Handler.debug("String is: " + s);
+						 //test to make sure it isn't a beta branch
+						 if(s.contains("beta")) {
+							 isBeta = true;
+							 break;
+						 }
 				        	
 						 int i = list.indexOf(s);
 				        	
 						 //only get the versions that have digits
 						 if(s.contains(split[0]) && s.contains(split[1])) {
 			        		list.set(i, s);
+			        		/*
+			        		 * just some debug stuff
 			        		Handler.debug("first string is " + split[0]);
 			        		Handler.debug("second string is " + split[1]);
+			        		*/
+			        		//get the version we wanna download
+			        		String tmp = s.replace(split[0], "");
+			        		downloadVer = tmp.replace(split[1], "");
+			        		
 			        		Handler.debug("this matches " + s);
 		        		}else {
 		        			it.remove();
 			        	}
-				        				        	
 					}
+					 //oops we picked the beta branch, retry with the branch below it
+					 if(isBeta) {
+						 //remove the beta version
+						 versions.remove(versions.indexOf(newV));
+						 //reset newV
+						 newV = lastV;
+						 
+						 //find the highest version
+						 for(int i : versions) {
+							 if(i > newV) {
+								 newV = i;
+							 }
+						 }
+						 
+						 //convert integer version to string
+						 download = insertEveryNCharacters(((Integer) newV).toString(), ".", 2);
+						 
+						 //remove padded zeroes
+						 download = download.replaceAll(".00", "");
+						 
+						
+						 
+						 if(download.endsWith("0") && !(download.length() < 8)) {
+							 download = download.substring(0, download.length() - 1);
+						 }
+						 
+						 
+						 url = new URL(os.getUrl() + download + "/");
+						 list = cleanupHTML(url, true);
+						 
+						 for(Iterator<String> it = list.iterator(); it.hasNext();) {
+							 //get index of string	
+							 String s = it.next();
+							 //Handler.debug("String is: " + s);
+							 
+					        	
+							 int i = list.indexOf(s);
+					        	
+							 //only get the versions that have digits
+							 if(s.contains(split[0]) && s.contains(split[1])) {
+				        		list.set(i, s);
+				        		Handler.debug("first string is " + split[0]);
+				        		Handler.debug("second string is " + split[1]);
+				        		String tmp = s.replace(split[0], "");
+				        		downloadVer = tmp.replace(split[1], "");
+				        		Handler.debug("this matches " + s);
+				        		
+				        		//url = new URL(url);
+				        		download = url.toString() + s;
+			        		}else {
+			        			it.remove();
+				        	}
+						}
+						 
+					 }
 				}else {
-										
+					//get the file name and then split it up					
 					String file = os.getFile();
 					String split[] = file.split("#");
 					for(Iterator<String> it = list.iterator(); it.hasNext();) {
@@ -143,9 +219,11 @@ public class Main {
 			        	
 			        	int i = list.indexOf(s);
 			        	
-			        	//only get the versions that have digits
+			        	//only get the files that match the file format we want
+			        	//split the string
 			        	if(s.contains(split[0]) && s.contains(split[1])) {
 			        		list.set(i, s);
+			        		//some debug stuff
 			        		/*Handler.debug("first string is " + split[0]);
 			        		Handler.debug("second string is " + split[1]);
 			        		Handler.debug("this matches " + s);*/
@@ -155,21 +233,30 @@ public class Main {
 			        				        	
 					}
 					
-					
+					//initialize variables
 					int version = 0;
 					int newVersion = Integer.parseInt(os.getLastVersion().replace(".", ""));
 					
+					//if this stays equal to none in the end there's an issue
 					download = "none";
+					
+					//get last os version
+					downloadVer = os.getLastVersion();
 					
 					for(String s : list) {
 						String tmp;
 						tmp = s.replace(split[0], "");
 						tmp = tmp.replace(split[1], "");
+						//the version we wanna download
+						downloadVer = tmp;
+						
 						tmp = tmp.replace(".", "");
+						//some debug stuff
 						//Handler.debug("the lastversion is " + newVersion);
 						//Handler.debug("stripped string is " + tmp);
 						version = Integer.parseInt(tmp);
 						
+						//compare versions
 						if(version > newVersion) {
 							newVersion = version;
 							download = s;
@@ -178,11 +265,12 @@ public class Main {
 						
 						
 					}
-					
+					//debug
 					if(Integer.parseInt(os.getLastVersion().replace(".", "")) == newVersion) {
 						Handler.debug("no update");
 						
 					}else {
+						os.setLastVersion(downloadVer);
 						Handler.debug("download this: " + download);
 					}
 				}
@@ -192,12 +280,25 @@ public class Main {
 				 if(download == os.getLastVersion()) {
 					 Handler.debug("we don't need to update " + os.getOsName());
 				 }else {
+					 download = url.toString() + download;
 					 Handler.debug("we need to get version: " + download + " of " + os.getOsName()); 
 				 }
-				 
-				//TODO detect version being outdated
-				//TODO also skip version stuff
+				
+				//set the url equal to the download url
+				URL toDownload = new URL(download);
+				//add to arraylist
+				downloadURLS.add(toDownload);
+				
+				//debug stuff
+				Handler.debug("the url to download is: " + toDownload);
+				
+				//update last version
+				os.setLastVersion(downloadVer);
 			}
+			
+			//TODO make a download function that features auto-resume, using arraylist downloadURLS
+			//TODO flush oses changes to file after i get downloading to work
+			
 		}catch(Exception e) {
 			Handler.debug(e, true);
 			e.printStackTrace();
