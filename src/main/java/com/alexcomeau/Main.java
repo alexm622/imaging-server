@@ -17,6 +17,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.safety.Cleaner;
 
 import com.alexcomeau.utilities.Handler;
+import com.alexcomeau.utilities.VersionTools;
 import com.alexcomeau.utilities.json.OperatingSystem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -49,68 +50,40 @@ public class Main {
 				URL url = new URL(os.getUrl());
 				
 				//cleanup the html into a more usable format
-				ArrayList<String> list = cleanupHTML(url, os.getIsIsoDir());
+				
 				String download, downloadVer = os.getLastVersion();
 				if(!os.getIsIsoDir()) {
+					ArrayList<String> verList = cleanupHTML(url, os.getIsIsoDir());
 					//TODO this needs comments
-					for(Iterator<String> it = list.iterator(); it.hasNext();) {
+					for(Iterator<String> it = verList.iterator(); it.hasNext();) {
 				        	//get index of string	
 				        	String s = it.next();
 				        	
-				        	int i = list.indexOf(s);
+				        	int i = verList.indexOf(s);
 				        	
 				        	//only get the versions that have digits
 				        	if(s.matches(".*\\d.*")) {
-				        		list.set(i, s);
+				        		verList.set(i, s);
 				        	}else {
 				        		it.remove();
 				        	}
 				        	
 					 }
-					 //versions as integers
-					 ArrayList<Integer> versions = new ArrayList<Integer>();
-					 
-					 for (String s : list) {
-						 //remove all "."'s
-						 s = s.replace(".", "");
-						 //pad with zeroes
-						 s = StringUtils.rightPad(s, 8, "0");
-						 //add to the arraylist of versions as integers
-						 versions.add(Integer.parseInt(s));
-						 
-						 Handler.debug("string in list to pad: " + s);
-					 }
-					 //sort into versions
-					 Collections.sort(versions);
-					 
-					 //get the last version
-					 String version = os.getLastVersion();
-					 
-					 //get the last version as an integer, and then set the variable for the next one to download
-					 int lastV = Integer.parseInt(StringUtils.rightPad(version.replace(".", ""), 8, "0"));
-					 int newV = lastV;
-					 
-					 //find the highest version
-					 for(int i : versions) {
-						 if(i > newV) {
-							 newV = i;
-						 }
-					 }
-					 
-					 
-					 
-					 //convert integer version to string
-					 download = insertEveryNCharacters(((Integer) newV).toString(), ".", 2);
-					 
-					 //remove padded zeroes
-					 download = download.replaceAll(".00", "");
-					 
-					 
+										
+					String lastVer = os.getLastVersion();
+					String newVer = lastVer;
+					
+					for(String s : verList) {
+						String greaterVer = VersionTools.greaterVersion(s, lastVer);
+						newVer = (greaterVer == s) ? s : newVer;
+					}
+					
+					download = newVer;
 					 
 					 
 					 //get the new url
 					 url = new URL(os.getUrl() + download + "/");
-					 list = cleanupHTML(url, true);
+					 ArrayList<String> list = cleanupHTML(url, true);
 					 
 					 //get the file name
 					 String file = os.getFile();
@@ -156,30 +129,19 @@ public class Main {
 					}
 					 //oops we picked the beta branch, retry with the branch below it
 					 if(isBeta) {
-						 //remove the beta version
-						 versions.remove(versions.indexOf(newV));
-						 //reset newV
-						 newV = lastV;
 						 
-						 //find the highest version
-						 for(int i : versions) {
-							 if(i > newV) {
-								 newV = i;
-							 }
+						 verList.remove(verList.indexOf(newVer));
+						 
+						 newVer = lastVer;
+						 
+							
+						 for(String s : verList) {
+							 String greaterVer = VersionTools.greaterVersion(s, lastVer);
+							 newVer = (greaterVer == s) ? s : newVer;
 						 }
 						 
-						 //convert integer version to string
-						 download = insertEveryNCharacters(((Integer) newV).toString(), ".", 2);
-						 
-						 //remove padded zeroes
-						 download = download.replaceAll(".00", "");
-						 
-						
-						 
-						 if(download.endsWith("0") && !(download.length() < 8)) {
-							 download = download.substring(0, download.length() - 1);
-						 }
-						 
+						 download = newVer;
+							 
 						 
 						 url = new URL(os.getUrl() + download + "/");
 						 list = cleanupHTML(url, true);
@@ -210,6 +172,7 @@ public class Main {
 						 
 					 }
 				}else {
+					ArrayList<String> list = cleanupHTML(url, os.getIsIsoDir());
 					//get the file name and then split it up					
 					String file = os.getFile();
 					String split[] = file.split("#");
