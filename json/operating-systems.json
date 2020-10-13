@@ -14,7 +14,7 @@
       "lastVersion": "20.04.1",
       "isIsoDir":false,
       "url": "https://mirrors.mit.edu/ubuntu-releases/releases/",
-      "file": "ubuntu-#ver-desktop-amd64.iso"
+      "file": "ubuntu-#-desktop-amd64.iso"
    },
    {
       "active": true,
@@ -45,5 +45,15 @@
       "isIsoDir":true,
       "url": "http://mirrors.acm.wpi.edu/archlinux/iso/latest/",
       "file": "archlinux-#-x86_64.iso"
+   },
+   {
+      "active": true,
+      "downloaded": false,
+      "checkVersion": true,
+      "lastVersion": "4.10",
+      "osName": "Parrot Security",
+      "isIsoDir":true,
+      "url": "http://mirrors.mit.edu/parrot/iso/current/",
+      "file": "Parrot-security-#_amd64.iso"
    }
 ]
