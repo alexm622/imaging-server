@@ -6,7 +6,7 @@ import java.util.Collections;
 public class VersionTools {
 	public static String greaterVersion(String s1, String s2) {
 		if(s1 == s2) {
-			return "both";
+			return s1;
 		}
 		String[] s1a = s1.split("."), s2a = s2.split(".");
 		
