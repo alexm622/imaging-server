@@ -10,6 +10,7 @@ public class OperatingSystem {
 	private String lastVersion;
 	private String url;
 	private String file;
+	private String path;
 	
 	public void setActive(boolean active) {
 		this.active = active;
@@ -42,6 +43,9 @@ public class OperatingSystem {
 		this.file = file;
 	}
 	
+	public void setPath(String path) {
+		this.path = path;
+	}
 	
 	public boolean getActive() {
 		return this.active;
@@ -74,5 +78,9 @@ public class OperatingSystem {
 	
 	public String getFile() {
 		return this.file;
+	}
+	
+	public String getPath() {
+		return this.path;
 	}
 }

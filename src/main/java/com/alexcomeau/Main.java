@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,6 +17,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Cleaner;
 
+import com.alexcomeau.utilities.Downloader;
 import com.alexcomeau.utilities.Handler;
 import com.alexcomeau.utilities.VersionTools;
 import com.alexcomeau.utilities.json.OperatingSystem;
@@ -41,6 +43,10 @@ public class Main {
 			
 			//loop through os's
 			for(OperatingSystem os : oses) {
+				//filename
+				String filename = "none";
+				
+				
 				//if inactive os skip
 				if(!os.getActive()) {
 					continue;
@@ -123,6 +129,9 @@ public class Main {
 			        		downloadVer = tmp.replace(split[1], "");
 			        		
 			        		Handler.debug("this matches " + s);
+			        		download = url.toString() + s;
+			        		Handler.debug("download is " + download);
+			        		filename = s;
 		        		}else {
 		        			it.remove();
 			        	}
@@ -162,9 +171,11 @@ public class Main {
 				        		String tmp = s.replace(split[0], "");
 				        		downloadVer = tmp.replace(split[1], "");
 				        		Handler.debug("this matches " + s);
+				        		filename = s;
 				        		
 				        		//url = new URL(url);
 				        		download = url.toString() + s;
+				        		Handler.debug("download is " + download);
 			        		}else {
 			        			it.remove();
 				        	}
@@ -190,6 +201,7 @@ public class Main {
 			        		/*Handler.debug("first string is " + split[0]);
 			        		Handler.debug("second string is " + split[1]);
 			        		Handler.debug("this matches " + s);*/
+			        		filename = s;
 			        	}else {
 			        		it.remove();
 			        	}
@@ -243,7 +255,7 @@ public class Main {
 				 if(download == os.getLastVersion()) {
 					 Handler.debug("we don't need to update " + os.getOsName());
 				 }else {
-					 download = url.toString() + download;
+					 download = url.toString() + filename;
 					 Handler.debug("we need to get version: " + download + " of " + os.getOsName()); 
 				 }
 				
@@ -257,6 +269,25 @@ public class Main {
 				
 				//update last version
 				os.setLastVersion(downloadVer);
+				
+				File output = new File(os.getPath() + filename);
+							
+				
+				//make path if not exist
+				
+				File path = new File(os.getPath());
+				//if file path does not exist make it
+				if(!path.exists()) {
+					path.mkdirs();
+				}
+				
+								
+				if(filename == "none") {
+					continue;
+				}
+				
+				Downloader.Download(toDownload, output);
+				
 			}
 			
 			//TODO make a download function that features auto-resume, using arraylist downloadURLS
@@ -328,7 +359,7 @@ public class Main {
         	
         }
 
-
+        
         return list;
         
         

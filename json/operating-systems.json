@@ -14,10 +14,11 @@
       "lastVersion": "20.04.1",
       "isIsoDir":false,
       "url": "https://mirrors.mit.edu/ubuntu-releases/releases/",
-      "file": "ubuntu-#-desktop-amd64.iso"
+      "file": "ubuntu-#-desktop-amd64.iso",
+      "path": "isos/ubuntu/"
    },
    {
-      "active": true,
+      "active": false,
       "downloaded": false,
       "checkVersion": true,
       "lastVersion": "2019.2",
@@ -27,7 +28,7 @@
       "file": "kali-linux-#-live-amd64.iso"
    },
    {
-      "active": true,
+      "active": false,
       "downloaded": false,
       "checkVersion": true,
       "lastVersion": "10.5.0",
@@ -37,7 +38,7 @@
       "file": "debian-#-amd64-xfce-CD-1.iso"
    },
    {
-      "active": true,
+      "active": false,
       "downloaded": false,
       "checkVersion": true,
       "lastVersion": "2020.09.01",
@@ -47,7 +48,7 @@
       "file": "archlinux-#-x86_64.iso"
    },
    {
-      "active": true,
+      "active": false,
       "downloaded": false,
       "checkVersion": true,
       "lastVersion": "4.10",
