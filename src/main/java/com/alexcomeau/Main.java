@@ -101,7 +101,6 @@ public class Main {
 					 for(Iterator<String> it = list.iterator(); it.hasNext();) {
 						 //get index of string	
 						 String s = it.next();
-						 Handler.debug("String is: " + s);
 						 //test to make sure it isn't a beta branch
 						 if(s.contains("beta")) {
 							 isBeta = true;
@@ -122,9 +121,9 @@ public class Main {
 			        		String tmp = s.replace(split[0], "");
 			        		downloadVer = tmp.replace(split[1], "");
 			        		
-			        		Handler.debug("this matches " + s);
+			        		//Handler.debug("this matches " + s);
 			        		download = url.toString() + s;
-			        		Handler.debug("download is " + download);
+			        		//Handler.debug("download is " + download);
 			        		filename = s;
 		        		}else {
 		        			it.remove();
@@ -160,11 +159,11 @@ public class Main {
 							 //only get the versions that have digits
 							 if(s.contains(split[0]) && s.contains(split[1])) {
 				        		list.set(i, s);
-				        		Handler.debug("first string is " + split[0]);
-				        		Handler.debug("second string is " + split[1]);
+				        		//Handler.debug("first string is " + split[0]);
+				        		//Handler.debug("second string is " + split[1]);
 				        		String tmp = s.replace(split[0], "");
 				        		downloadVer = tmp.replace(split[1], "");
-				        		Handler.debug("this matches " + s);
+				        		//Handler.debug("this matches " + s);
 				        		filename = s;
 				        		
 				        		//url = new URL(url);
@@ -193,8 +192,9 @@ public class Main {
 			        		list.set(i, s);
 			        		//some debug stuff
 			        		/*Handler.debug("first string is " + split[0]);
-			        		Handler.debug("second string is " + split[1]);
-			        		Handler.debug("this matches " + s);*/
+			        		Handler.debug("second string is " + split[1]);*/
+			        		
+			        		Handler.debug("the download is " + s);
 			        		filename = s;
 			        	}else {
 			        		it.remove();
@@ -250,7 +250,7 @@ public class Main {
 					 Handler.debug("we don't need to update " + os.getOsName());
 				 }else {
 					 download = url.toString() + filename;
-					 Handler.debug("we need to get version: " + download + " of " + os.getOsName()); 
+					 //Handler.debug("we need to get version: " + download + " of " + os.getOsName()); 
 				 }
 				
 				//set the url equal to the download url
@@ -264,12 +264,13 @@ public class Main {
 				//update last version
 				os.setLastVersion(downloadVer);
 				
+				//output file name
 				File output = new File(os.getPath() + filename);
 							
 				
 				//make path if not exist
-				
 				File path = new File(os.getPath());
+				
 				//if file path does not exist make it
 				if(!path.exists()) {
 					path.mkdirs();
@@ -277,19 +278,23 @@ public class Main {
 				
 								
 				if(filename == "none") {
+					//no update
 					continue;
 				}
 				
 				boolean downloaded = Downloader.Download(toDownload, output);
 				
 				if(downloaded) {
+					//if successfully downloaded then set to true
 					os.setDownloaded(true);					
 				}else {
+					//if not downloaded and it threw an error then set to false
 					os.setDownloaded(false);
 				}
 				
 			}
 			
+			//flush to file
 			om.writeValue(new File("json/operating-systems.json"), oses);
 			
 		}catch(Exception e) {
@@ -358,7 +363,7 @@ public class Main {
         	
         }
 
-        
+        //return the cleansed string
         return list;
         
         

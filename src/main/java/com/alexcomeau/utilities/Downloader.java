@@ -20,8 +20,8 @@ public class Downloader {
 		
 		
 		long removeFileSize = getSize(url);
-		Handler.debug("existing size" + outputFile.length());
-		Handler.debug("download size" + removeFileSize);
+		Handler.debug("existing size: " + outputFile.length());
+		Handler.debug("download size: " + removeFileSize);
 		if(outputFile.length() == removeFileSize) {
 			return true;
 		}
@@ -31,30 +31,42 @@ public class Downloader {
 		
 		//Add this right after you initialize httpUrlConnection but before beginning download
 		if(outputFile.exists()) {
+			//set the request properties
 		    httpConnection.setRequestProperty("Range", "bytes="+outputFile.length()+"-");
 		}
+		//make the file stream
 		FileOutputStream fileOutputStream;
 		//And then you'd initialize the file output stream like so:
 		if(outputFile.exists()) {
 		    fileOutputStream = new FileOutputStream(outputFile, true); //resume download, append to existing file
 		}else {
-		    fileOutputStream = new FileOutputStream(outputFile);
+		    fileOutputStream = new FileOutputStream(outputFile); //no resume download
 		}
 		
+		//set the output to true
 		boolean out = true;
-		long existingFileSize = outputFile.length();
+		
+		//create the buffered streams
 		BufferedInputStream in = new BufferedInputStream(httpConnection.getInputStream());
 		
 		BufferedOutputStream bout = new BufferedOutputStream(fileOutputStream, 1024);
 		try
 		{
+			//create the stuff
 		    byte[] data = new byte[1024];
 		    int x = 0;
+		    
+		    //the number of written bytes
 		    long written = outputFile.length();
+		    
+		    //print a newline
 		    System.out.print("\n");
+		    
+		    //loop through stuff
 		    while ((x = in.read(data, 0, 1024)) >= 0) 
 		    {
 		    	written += 1024;
+		    	//print the number of written bytes
 		    	System.out.print("\r" + written + "\\" + removeFileSize + "                ");
 		        bout.write(data, 0, x);
 		    }
@@ -64,7 +76,7 @@ public class Downloader {
 		    e.printStackTrace();
 		    out = false;
 		}
-		finally
+		finally //flush to files
 		{
 		    if(bout!=null)
 		    {
@@ -78,10 +90,11 @@ public class Downloader {
 		    }
 		    
 		}
-		
+		//return the file download status
 		return out;
 	}
 	
+	//get the file size
 	private static long getSize(URL url) {
 		
 	    URLConnection conn = null;
