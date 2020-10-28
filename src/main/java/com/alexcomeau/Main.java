@@ -4,24 +4,19 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.safety.Cleaner;
-
 import com.alexcomeau.utilities.Downloader;
 import com.alexcomeau.utilities.Handler;
 import com.alexcomeau.utilities.VersionTools;
 import com.alexcomeau.utilities.json.OperatingSystem;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class Main {
 	public static void main(String[] args) {
@@ -30,10 +25,9 @@ public class Main {
 			System.out.print("test");
 			
 			//create objectmapper
-			ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);;
 			
-			//arraylist of urls
-			ArrayList<URL> downloadURLS = new ArrayList<URL>();
+			
 			
 			//read os's from file
 			OperatingSystem[] oses = om.readValue(new File("json/operating-systems.json"), OperatingSystem[].class);
@@ -261,11 +255,11 @@ public class Main {
 				
 				//set the url equal to the download url
 				URL toDownload = new URL(download);
-				//add to arraylist
-				downloadURLS.add(toDownload);
+				
 				
 				//debug stuff
 				Handler.debug("the url to download is: " + toDownload);
+				
 				
 				//update last version
 				os.setLastVersion(downloadVer);
@@ -286,12 +280,17 @@ public class Main {
 					continue;
 				}
 				
-				Downloader.Download(toDownload, output);
+				boolean downloaded = Downloader.Download(toDownload, output);
+				
+				if(downloaded) {
+					os.setDownloaded(true);					
+				}else {
+					os.setDownloaded(false);
+				}
 				
 			}
 			
-			//TODO make a download function that features auto-resume, using arraylist downloadURLS
-			//TODO flush oses changes to file after i get downloading to work
+			om.writeValue(new File("json/operating-systems.json"), oses);
 			
 		}catch(Exception e) {
 			Handler.debug(e, true);
@@ -363,20 +362,5 @@ public class Main {
         return list;
         
         
-	}
-	private static String insertEveryNCharacters(String originalText, String textToInsert, int breakInterval) {
-	    String out = "";
-	    int textLength = originalText.length(); //initialize this here or in the start of the for in order to evaluate this once, not every loop
-	    for (int i = breakInterval , current = 0; i <= textLength || current < textLength; current = i, i += breakInterval ) {
-	        if(current != 0) {  //do not insert the text on the first loop
-	            out += textToInsert;
-	        }
-	        if(i <= textLength) { //double check that text is at least long enough to go to index i without out of bounds exception
-	            out += originalText.substring(current, i);
-	        } else { //text left is not longer than the break interval, so go simply from current to end.
-	            out += originalText.substring(current); //current to end (if text is not perfectly divisible by interval, it will still get included)
-	        }
-	    }
-	    return out;
 	}
 }
