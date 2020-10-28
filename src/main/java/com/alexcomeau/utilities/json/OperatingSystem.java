@@ -11,6 +11,8 @@ public class OperatingSystem {
 	private String url;
 	private String file;
 	private String path;
+	private String hashFile;
+	private String hashType;
 	
 	public void setActive(boolean active) {
 		this.active = active;
@@ -45,6 +47,14 @@ public class OperatingSystem {
 	
 	public void setPath(String path) {
 		this.path = path;
+	}
+	
+	public void setHashFile(String hashFile) {
+		this.hashFile = hashFile;
+	}
+	
+	public void setHashType(String hashType) {
+		this.hashType = hashType;
 	}
 	
 	public boolean getActive() {
@@ -82,5 +92,13 @@ public class OperatingSystem {
 	
 	public String getPath() {
 		return this.path;
+	}
+	
+	public String getHashFile() {
+		return this.hashFile;
+	}
+	
+	public String getHashType() {
+		return this.hashType;
 	}
 }

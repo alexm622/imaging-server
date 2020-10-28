@@ -13,6 +13,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import com.alexcomeau.utilities.Downloader;
 import com.alexcomeau.utilities.Handler;
+import com.alexcomeau.utilities.HashChecking;
+import com.alexcomeau.utilities.HtmlCleaner;
 import com.alexcomeau.utilities.VersionTools;
 import com.alexcomeau.utilities.json.OperatingSystem;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,7 +55,7 @@ public class Main {
 				
 				String download, downloadVer = os.getLastVersion();
 				if(!os.getIsIsoDir()) {
-					ArrayList<String> verList = cleanupHTML(url, os.getIsIsoDir());
+					ArrayList<String> verList = HtmlCleaner.cleanupHTML(url, os.getIsIsoDir());
 					//TODO this needs comments
 					for(Iterator<String> it = verList.iterator(); it.hasNext();) {
 				        	//get index of string	
@@ -83,7 +85,7 @@ public class Main {
 					 
 					 //get the new url
 					 url = new URL(os.getUrl() + download + "/");
-					 ArrayList<String> list = cleanupHTML(url, true);
+					 ArrayList<String> list = HtmlCleaner.cleanupHTML(url, true);
 					 
 					 //get the file name
 					 String file = os.getFile();
@@ -146,7 +148,7 @@ public class Main {
 							 
 						 
 						 url = new URL(os.getUrl() + download + "/");
-						 list = cleanupHTML(url, true);
+						 list = HtmlCleaner.cleanupHTML(url, true);
 						 
 						 for(Iterator<String> it = list.iterator(); it.hasNext();) {
 							 //get index of string	
@@ -176,7 +178,7 @@ public class Main {
 						 
 					 }
 				}else {
-					ArrayList<String> list = cleanupHTML(url, os.getIsIsoDir());
+					ArrayList<String> list = HtmlCleaner.cleanupHTML(url, os.getIsIsoDir());
 					//get the file name and then split it up					
 					String file = os.getFile();
 					String split[] = file.split("#");
@@ -261,8 +263,7 @@ public class Main {
 				Handler.debug("the url to download is: " + toDownload);
 				
 				
-				//update last version
-				os.setLastVersion(downloadVer);
+				
 				
 				//output file name
 				File output = new File(os.getPath() + filename);
@@ -281,9 +282,35 @@ public class Main {
 					//no update
 					continue;
 				}
+				boolean hashMatches = false;
+				boolean downloaded = false;
 				
-				boolean downloaded = Downloader.Download(toDownload, output);
+				do {
+					if(os.getDownloaded() && os.getLastVersion() == downloadVer) {
+						break;
+					}
+					//delete file
+					output.delete();
+					
+					//download file
+					downloaded = Downloader.Download(toDownload, output);
+					
+					Handler.debug("this url is" + url.toString());
+					
+					//check hashes
+					hashMatches = HashChecking.chechHash(output, HashChecking.getOnlineHash(url, filename, os), os.getHashType());
+					//output results
+					Handler.debug("does hash match? " + ((hashMatches) ? "yes" : "no"));
+				}while(!hashMatches && downloaded);
 				
+				//check hashes again
+				hashMatches = HashChecking.chechHash(output, HashChecking.getOnlineHash(url, filename, os), os.getHashType());
+				
+				//output results
+				Handler.debug("does hash match? " + ((hashMatches) ? "yes" : "no"));
+				
+				//update last version
+				os.setLastVersion(downloadVer);
 				if(downloaded) {
 					//if successfully downloaded then set to true
 					os.setDownloaded(true);					
@@ -305,67 +332,5 @@ public class Main {
 	}
 
 	
-	private static ArrayList<String> cleanupHTML(URL url, boolean isIsoDir) throws IOException{
-		//read mirror data as html
-        BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-        
-        //single line of html var
-        String line;
-
-        //stringbuilder to create final html file
-        StringBuilder sb = new StringBuilder();
-        
-        //get all the lines from html and put into one string
-        while ((line = br.readLine()) != null) {
-
-            sb.append(line);
-            sb.append(System.lineSeparator());
-        }
-        
-        //convert from html to plaintext
-        Document doc = Jsoup.parse(sb.toString());
-        String text = doc.body().text();
-        
-        //split up at newlines
-        ArrayList<String> list = new ArrayList<String>(Arrays.asList(text.split("\n")));
-        
-        //remove the first one
-        list.remove(0);
-        
-        //loop through list
-        for(Iterator<String> it = list.iterator(); it.hasNext();) {
-        	//get index of string
-        	
-        	String s = it.next();
-        	
-        	int i = list.indexOf(s);
-        	
-        	
-        	
-        	
-        	if((isIsoDir && s.contains("/")) || (!s.contains("/") && !isIsoDir)) {
-        		//if item is a file remove
-        		it.remove();
-        	}else if(isIsoDir && !s.contains(".iso") || s.contains(".sig") || s.contains(".torrent")) {
-        		it.remove();
-        	}else {
-        		if(isIsoDir) {
-        			s= s.substring(0, s.indexOf(".iso")) + ".iso";
-        			//Handler.debug("substring is " + s);
-        			list.set(i, s);
-        			continue;
-        		}
-        		s = s.substring(0, s.indexOf("/"));
-        		list.set(i, s);
-        	}
-        	
-        	
-        	
-        }
-
-        //return the cleansed string
-        return list;
-        
-        
-	}
+	
 }
