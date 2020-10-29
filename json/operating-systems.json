@@ -16,38 +16,50 @@
   "checkVersion" : true,
   "osName" : "Ubuntu Desktop",
   "isIsoDir" : false,
-  "lastVersion" : "20.10",
+  "lastVersion" : "20.04.1",
   "url" : "https://mirrors.mit.edu/ubuntu-releases/releases/",
   "file" : "ubuntu-#-desktop-amd64.iso",
-  "path" : "isos/ubuntu/",
+  "path" : "iso's/ubuntu/ubuntu desktop/",
   "hashFile" : "SHA256SUMS",
   "hashType" : "SHA-256"
 }, {
-  "active" : false,
+  "active" : true,
+  "downloaded" : true,
+  "checkVersion" : true,
+  "osName" : "Ubuntu Server",
+  "isIsoDir" : false,
+  "lastVersion" : "20.04.1",
+  "url" : "https://mirrors.mit.edu/ubuntu-releases/releases/",
+  "file" : "ubuntu-#-live-server-amd64.iso",
+  "path" : "iso's/ubuntu/ubuntu server/",
+  "hashFile" : "SHA256SUMS",
+  "hashType" : "SHA-256"
+},{
+  "active" : true,
   "downloaded" : false,
   "checkVersion" : true,
   "osName" : "Kali Linux",
   "isIsoDir" : true,
-  "lastVersion" : "2019.2",
+  "lastVersion" : "2019.4",
   "url" : "http://cdimage.kali.org/current/",
   "file" : "kali-linux-#-live-amd64.iso",
-  "path" : null,
+  "path" : "iso's/kali/",
   "hashFile" : "SHA256SUMS",
   "hashType" : "SHA-256"
 }, {
-  "active" : false,
+  "active" : true,
   "downloaded" : false,
   "checkVersion" : true,
   "osName" : "Latest Debian Installer",
   "isIsoDir" : true,
-  "lastVersion" : "10.5.0",
+  "lastVersion" : "10.6.0",
   "url" : "http://mirrors.gigenet.com/debian-cd/current/amd64/iso-cd/",
   "file" : "debian-#-amd64-xfce-CD-1.iso",
-  "path" : null,
+  "path" : "iso's/debian/",
   "hashFile" : "SHA256SUMS",
   "hashType" : "SHA-256"
 }, {
-  "active" : false,
+  "active" : true,
   "downloaded" : false,
   "checkVersion" : true,
   "osName" : "Arch Linux",
@@ -55,11 +67,11 @@
   "lastVersion" : "2020.09.01",
   "url" : "http://mirrors.acm.wpi.edu/archlinux/iso/latest/",
   "file" : "archlinux-#-x86_64.iso",
-  "path" : null,
+  "path" : "iso's/arch/",
   "hashFile" : "sha1sums.txt",
   "hashType" : "SHA-1"
 }, {
-  "active" : false,
+  "active" : true,
   "downloaded" : false,
   "checkVersion" : true,
   "osName" : "Parrot Security",
@@ -67,7 +79,7 @@
   "lastVersion" : "4.10",
   "url" : "http://mirrors.mit.edu/parrot/iso/current/",
   "file" : "Parrot-security-#_amd64.iso",
-  "path" : null,
+  "path" : "iso's/parrot/",
   "hashFile" : "signed-hashes.txt",
   "hashType" : "MD5"
-} ]
+}]
