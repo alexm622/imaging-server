@@ -34,6 +34,9 @@ public class Downloader {
 			//set the request properties
 		    httpConnection.setRequestProperty("Range", "bytes="+outputFile.length()+"-");
 		}
+		
+		httpConnection.setConnectTimeout(5000);
+		httpConnection.setReadTimeout(5000);
 		//make the file stream
 		FileOutputStream fileOutputStream;
 		//And then you'd initialize the file output stream like so:
@@ -69,6 +72,16 @@ public class Downloader {
 		    	//print the number of written bytes
 		    	System.out.print("\r" + written + "\\" + removeFileSize + "                ");
 		        bout.write(data, 0, x);
+		        if(written % (10^6) == 0) {
+		        	if(bout!=null)
+				    {
+				        bout.flush();
+				    }
+				    if(fileOutputStream!=null)
+				    {
+				        fileOutputStream.flush();
+				    }
+		        }
 		    }
 		}
 		catch(Exception e)
@@ -78,7 +91,7 @@ public class Downloader {
 		}
 		finally //flush to files
 		{
-		    if(bout!=null)
+			if(bout!=null)
 		    {
 		        bout.flush();
 		        bout.close();
