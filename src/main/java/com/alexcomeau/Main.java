@@ -317,13 +317,7 @@ public class Main {
 				}
 				
 				//check hashes again
-				hashMatches = HashChecking.chechHash(output, HashChecking.getOnlineHash(url, filename, os), os.getHashType());
 				
-				//output results
-				Handler.debug("does hash match? " + ((hashMatches) ? "yes" : "no"));
-				
-				//update last version
-				os.setLastVersion(downloadVer);
 				if(downloaded) {
 					//if successfully downloaded then set to true
 					os.setDownloaded(true);					
