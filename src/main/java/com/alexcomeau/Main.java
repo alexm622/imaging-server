@@ -292,7 +292,7 @@ public class Main {
 					
 				}
 				
-				while(!hashMatches && downloaded) {
+				while(!hashMatches) {
 					if((os.getDownloaded() && os.getLastVersion() == downloadVer )|| hashMatches) {
 						break;
 					}
