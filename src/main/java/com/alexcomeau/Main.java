@@ -286,12 +286,14 @@ public class Main {
 				boolean downloaded = false;
 				try {
 					hashMatches = HashChecking.chechHash(output, HashChecking.getOnlineHash(url, filename, os), os.getHashType());
+					//output results
+					Handler.debug("does hash match? " + ((hashMatches) ? "yes" : "no"));
 				}catch(Exception e) {
 					
 				}
 				
-				do {
-					if(os.getDownloaded() && os.getLastVersion() == downloadVer || hashMatches) {
+				while(!hashMatches && downloaded) {
+					if((os.getDownloaded() && os.getLastVersion() == downloadVer )|| hashMatches) {
 						break;
 					}
 					//delete file
@@ -306,7 +308,7 @@ public class Main {
 					hashMatches = HashChecking.chechHash(output, HashChecking.getOnlineHash(url, filename, os), os.getHashType());
 					//output results
 					Handler.debug("does hash match? " + ((hashMatches) ? "yes" : "no"));
-				}while(!hashMatches && downloaded);
+				}
 				
 				//check hashes again
 				hashMatches = HashChecking.chechHash(output, HashChecking.getOnlineHash(url, filename, os), os.getHashType());
