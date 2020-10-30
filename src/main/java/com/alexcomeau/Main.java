@@ -284,9 +284,14 @@ public class Main {
 				}
 				boolean hashMatches = false;
 				boolean downloaded = false;
+				try {
+					hashMatches = HashChecking.chechHash(output, HashChecking.getOnlineHash(url, filename, os), os.getHashType());
+				}catch(Exception e) {
+					
+				}
 				
 				do {
-					if(os.getDownloaded() && os.getLastVersion() == downloadVer) {
+					if(os.getDownloaded() && os.getLastVersion() == downloadVer || hashMatches) {
 						break;
 					}
 					//delete file

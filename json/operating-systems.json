@@ -11,7 +11,7 @@
   "hashFile" : "SHA256SUMS",
   "hashType" : "SHA-256"
 }, {
-  "active" : true,
+  "active" : false,
   "downloaded" : true,
   "checkVersion" : true,
   "osName" : "Ubuntu Desktop",
@@ -35,7 +35,7 @@
   "hashFile" : "SHA256SUMS",
   "hashType" : "SHA-256"
 },{
-  "active" : true,
+  "active" : false,
   "downloaded" : false,
   "checkVersion" : true,
   "osName" : "Kali Linux",
@@ -47,7 +47,7 @@
   "hashFile" : "SHA256SUMS",
   "hashType" : "SHA-256"
 }, {
-  "active" : true,
+  "active" : false,
   "downloaded" : false,
   "checkVersion" : true,
   "osName" : "Latest Debian Installer",
@@ -59,7 +59,7 @@
   "hashFile" : "SHA256SUMS",
   "hashType" : "SHA-256"
 }, {
-  "active" : true,
+  "active" : false,
   "downloaded" : false,
   "checkVersion" : true,
   "osName" : "Arch Linux",
@@ -71,7 +71,7 @@
   "hashFile" : "sha1sums.txt",
   "hashType" : "SHA-1"
 }, {
-  "active" : true,
+  "active" : false,
   "downloaded" : false,
   "checkVersion" : true,
   "osName" : "Parrot Security",
