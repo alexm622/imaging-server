@@ -291,13 +291,19 @@ public class Main {
 				}catch(Exception e) {
 					
 				}
-				
+				boolean processed = false;
 				while(!hashMatches) {
 					if((os.getDownloaded() && os.getLastVersion() == downloadVer )|| hashMatches) {
 						break;
 					}
-					//delete file
-					output.delete();
+					if(Downloader.getSize(toDownload) == output.length()) {
+						processed = true;
+					}
+					
+					if(processed) {
+						//delete file
+						output.delete();
+					}
 					
 					//download file
 					downloaded = Downloader.Download(toDownload, output);

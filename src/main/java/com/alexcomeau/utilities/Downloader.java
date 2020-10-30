@@ -70,9 +70,10 @@ public class Downloader {
 		    {
 		    	written += 1024;
 		    	//print the number of written bytes
-		    	System.out.print("\r" + written + "\\" + removeFileSize + "                ");
+		    	
 		        bout.write(data, 0, x);
-		        if(written % (10^6) == 0) {
+		        if(written % (10^4) == 0) {
+		        	System.out.print("\r" + written + "\\" + removeFileSize + "                ");
 		        	if(bout!=null)
 				    {
 				        bout.flush();
@@ -108,7 +109,7 @@ public class Downloader {
 	}
 	
 	//get the file size
-	private static long getSize(URL url) {
+	public static long getSize(URL url) {
 		
 	    URLConnection conn = null;
 	    try {
