@@ -74,7 +74,7 @@ public class HashChecking {
 		
 		File file = new File(os.getPath() + os.getHashFile());
 		
-		Downloader.Download(downloadURL, file);
+		Downloader.Download(downloadURL, file, false);
 		
 		String line = "";
 		Scanner scanner = new Scanner(file);

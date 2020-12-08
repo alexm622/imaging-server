@@ -306,7 +306,7 @@ public class Main {
 					}
 					
 					//download file
-					downloaded = Downloader.Download(toDownload, output);
+					downloaded = Downloader.Download(toDownload, output, true);
 					
 					Handler.debug("this url is" + url.toString());
 					

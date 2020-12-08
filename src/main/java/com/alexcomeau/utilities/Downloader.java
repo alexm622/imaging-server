@@ -12,7 +12,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class Downloader {
-	public static boolean Download(URL url, File outputFile) throws IOException {
+	public static boolean Download(URL url, File outputFile, boolean checkExist) throws IOException {
 		
 		
 		Handler.debug("the url is: " + url.toString());
@@ -22,7 +22,7 @@ public class Downloader {
 		long removeFileSize = getSize(url);
 		Handler.debug("existing size: " + outputFile.length());
 		Handler.debug("download size: " + removeFileSize);
-		if(outputFile.length() == removeFileSize) {
+		if(outputFile.length() == removeFileSize && checkExist) {
 			return true;
 		}
 		
@@ -30,7 +30,7 @@ public class Downloader {
 		
 		
 		//Add this right after you initialize httpUrlConnection but before beginning download
-		if(outputFile.exists()) {
+		if(outputFile.exists() && checkExist) {
 			//set the request properties
 		    httpConnection.setRequestProperty("Range", "bytes="+outputFile.length()+"-");
 		}
